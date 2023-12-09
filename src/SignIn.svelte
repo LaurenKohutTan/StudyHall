@@ -3,7 +3,7 @@
 
   let students = ["Connor Slade"];
 
-  function removeName(name) {
+  function removeName() {
     new Audio("sound.wav").play();
   }
 
@@ -18,7 +18,7 @@
 <br />
 {#each students as name}
   <div class="btn-group">
-    <button on:click={(_) => removeName(name)}>
+    <button on:click={(_) => removeName()}>
       {name}
     </button>
   </div>

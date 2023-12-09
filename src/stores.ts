@@ -21,10 +21,16 @@ class Class {
   }
 }
 
-export const data = writable(
-  Class.fromJSON(JSON.parse(localStorage.getItem("data") ?? ""))
-);
+export const data = writable(loadClass());
 
 data.subscribe((value) =>
   localStorage.setItem("data", JSON.stringify(value.toJSON()))
 );
+
+function loadClass(): Class {
+  try {
+    return Class.fromJSON(JSON.parse(localStorage.getItem("data") ?? ""));
+  } catch {
+    return new Class("Class", []);
+  }
+}
