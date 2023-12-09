@@ -4,6 +4,7 @@ class Class {
   id: number;
   name: string;
   students: string[];
+  signedIn: string[] = [];
 
   constructor(id: number, name: string, students: string[]) {
     this.id = id;
@@ -12,7 +13,29 @@ class Class {
   }
 
   static fromJSON(json: any) {
-    return new Class(json.id, json.name, json.students);
+    let c = new Class(json.id, json.name, json.students);
+    c.signedIn = json.signedIn ?? [];
+    return c;
+  }
+
+  freshStudents() {
+    return this.students.filter((s) => !this.signedIn.includes(s));
+  }
+
+  signIn(student: string) {
+    if (!this.signedIn.includes(student)) this.signedIn.push(student);
+  }
+
+  signOut(student: string) {
+    this.signedIn = this.signedIn.filter((s) => s !== student);
+  }
+
+  allSignedIn() {
+    return this.freshStudents().length === 0;
+  }
+
+  resetAll() {
+    this.signedIn = [];
   }
 
   toJSON() {
@@ -20,6 +43,7 @@ class Class {
       id: this.id,
       name: this.name,
       students: this.students,
+      signedIn: this.signedIn,
     };
   }
 }
