@@ -37,6 +37,16 @@ class Classes {
     this.classes.push(new Class(id + 1, name, students));
   }
 
+  edit(id: number, name: string, students: string[]) {
+    let c = this.get(id)!;
+    c.name = name;
+    c.students = students;
+  }
+
+  get(id: number): Class | null {
+    return this.classes.find((c) => c.id === id) || null;
+  }
+
   remove(id: number) {
     this.classes = this.classes.filter((c) => c.id !== id);
     if (this.current === id) this.current = -1;

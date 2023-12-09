@@ -13,8 +13,9 @@
 
   import { classes } from "./stores";
 
-  class State {
+  class ModalState {
     mode: ModelMode;
+    id: number | null = null;
     name: string;
     students: string;
 
@@ -31,14 +32,17 @@
     Creating,
   }
 
-  let state = new State(ModelMode.Closed, "", []);
+  let state = new ModalState(ModelMode.Closed, "", []);
 
   function modalClose() {
-    state.mode = ModelMode.Closed;
     classes.update((x) => {
-      x.add(state.name, state.students.split("\n"));
+      if (state.mode == ModelMode.Creating)
+        x.add(state.name, state.students.split("\n"));
+      else if (state.mode == ModelMode.Editing)
+        x.edit(state.id!, state.name, state.students.split("\n"));
       return x;
     });
+    state.mode = ModelMode.Closed;
   }
 
   function removeClass(id: number) {
@@ -46,6 +50,12 @@
       x.remove(id);
       return x;
     });
+  }
+
+  function editClass(id: number) {
+    let c = $classes.get(id)!;
+    state = new ModalState(ModelMode.Editing, c.name, c.students);
+    state.id = id;
   }
 </script>
 
@@ -65,7 +75,7 @@
   {#each $classes.classes as i}
     <Group>
       <Text>{`${i.name} (${i.students.length} students)`}</Text>
-      <Button variant="outline">Edit</Button>
+      <Button variant="outline" on:click={() => editClass(i.id)}>Edit</Button>
       <Button variant="outline" on:click={() => removeClass(i.id)}>
         Delete
       </Button>
@@ -89,5 +99,7 @@
   ></Textarea>
   <br />
 
-  <Button variant="outline" on:click={modalClose}>Create</Button>
+  <Button variant="outline" on:click={modalClose}>
+    {state.mode == ModelMode.Creating ? "Create" : "Save"}
+  </Button>
 </Modal>
