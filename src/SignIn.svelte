@@ -1,56 +1,57 @@
 <script lang="ts">
-  import { classes } from "./stores";
+  import {
+    Divider,
+    NativeSelect,
+    Title,
+    Text,
+    Group,
+    Button,
+  } from "@svelteuidev/core";
+  import { state } from "./stores";
+  import { Person } from "radix-icons-svelte";
+  import { navigate } from "svelte-routing";
 
-  let students = ["Connor Slade"];
+  let classList = Array.from(
+    $state.classes.map((x) => {
+      return { label: x.name, value: x.id.toString() };
+    })
+  );
+  let selected = "";
+  $: selectedClass = $state.classes.find((x) => x.id == parseInt(selected));
 
-  function removeName() {
-    new Audio("sound.wav").play();
+  const DING = new Audio("sound.wav");
+  function playDing() {
+    if (!$state.playDing) return;
+    (DING.cloneNode() as HTMLAudioElement).play();
   }
-
-  function reset() {}
-
-  function undo() {}
 </script>
 
-<h1>Vail Study Hall</h1>
-<button on:click={(_) => undo()}> UNDO LAST </button>
+<Title>StudyHall Sign In</Title>
+<Divider />
 
+<Text>Select a class below, then click each student name to sign them in.</Text>
 <br />
-{#each students as name}
-  <div class="btn-group">
-    <button on:click={(_) => removeName()}>
-      {name}
-    </button>
-  </div>
-{/each}
 
-<p></p>
-<br /><br /><br />
-<button on:click={(_) => reset()}> Reset List </button>
+<Group>
+  <NativeSelect
+    data={classList}
+    icon={Person}
+    placeholder="Select a class"
+    bind:value={selected}
+    style="width: 100%"
+  />
+  <Button variant="outline" on:click={() => navigate("/config")}>Config</Button>
+  <Button variant="outline">Undo</Button>
+  <Button variant="outline">Reset All</Button>
+</Group>
 
-<style>
-  .btn-group button {
-    display: block;
-    margin-bottom: 35px;
-    padding: 15px;
-    background-color: #f76027;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    padding: 0.8rem;
-    display: block;
-    font-size: 24px;
-  }
-
-  button {
-    display: block;
-    margin-bottom: 15px;
-    padding: 15px;
-    background-color: #cccccc;
-    color: black;
-    border: none;
-    border-radius: 4px;
-    padding: 0.5rem;
-    display: block;
-  }
-</style>
+{#if selectedClass}
+  <Divider />
+  <Group>
+    {#each selectedClass.students as student}
+      <Button variant="filled" size="md" on:click={playDing}>
+        {student}
+      </Button>
+    {/each}
+  </Group>
+{/if}

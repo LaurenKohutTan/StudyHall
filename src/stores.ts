@@ -17,67 +17,69 @@ class Class {
 
   toJSON() {
     return {
+      id: this.id,
       name: this.name,
       students: this.students,
     };
   }
 }
 
-class Classes {
-  classes: Class[];
-  current: number;
+class State {
+  classes: Class[] = [];
+  current: number = -1;
+  playDing: boolean = true;
 
-  constructor(classes: Class[], current: number) {
-    this.classes = classes;
-    this.current = current;
-  }
-
-  add(name: string, students: string[]) {
+  addClass(name: string, students: string[]) {
     let id = this.classes.map((c) => c.id).reduce((a, b) => Math.max(a, b), 0);
     this.classes.push(new Class(id + 1, name, students));
   }
 
-  edit(id: number, name: string, students: string[]) {
-    let c = this.get(id)!;
+  editClass(id: number, name: string, students: string[]) {
+    let c = this.getClass(id)!;
     c.name = name;
     c.students = students;
   }
 
-  get(id: number): Class | null {
+  getClass(id: number): Class | null {
     return this.classes.find((c) => c.id === id) || null;
   }
 
-  remove(id: number) {
+  removeClass(id: number) {
     this.classes = this.classes.filter((c) => c.id !== id);
     if (this.current === id) this.current = -1;
   }
 
-  isEmpty() {
+  noClasses() {
     return this.classes.length === 0;
   }
 
   static fromJSON(json: any) {
-    return new Classes(json.classes.map(Class.fromJSON), json.current);
+    let state = new State();
+    state.classes = json.classes.map(Class.fromJSON);
+    state.current = json.current;
+    state.playDing = json.playDing;
+    return state;
   }
 
   toJSON() {
     return {
       classes: this.classes,
       current: this.current,
+      playDing: this.playDing,
     };
   }
 }
 
-export const classes = writable(loadClasses());
+export const state = writable(loadClasses());
 
-classes.subscribe((value) =>
+state.subscribe((value) =>
   localStorage.setItem("data", JSON.stringify(value.toJSON()))
 );
 
-function loadClasses(): Classes {
+function loadClasses(): State {
   try {
-    return Classes.fromJSON(JSON.parse(localStorage.getItem("data")!));
+    return State.fromJSON(JSON.parse(localStorage.getItem("data")!));
   } catch {
-    return new Classes([], -1);
+    return new State();
   }
 }
