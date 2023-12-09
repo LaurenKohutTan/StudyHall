@@ -1,16 +1,18 @@
 import { writable } from "svelte/store";
 
 class Class {
+  id: number;
   name: string;
   students: string[];
 
-  constructor(name: string, students: string[]) {
+  constructor(id: number, name: string, students: string[]) {
+    this.id = id;
     this.name = name;
     this.students = students;
   }
 
   static fromJSON(json: any) {
-    return new Class(json.name, json.students);
+    return new Class(json.id, json.name, json.students);
   }
 
   toJSON() {
@@ -21,16 +23,51 @@ class Class {
   }
 }
 
-export const data = writable(loadClass());
+class Classes {
+  classes: Class[];
+  current: number;
 
-data.subscribe((value) =>
+  constructor(classes: Class[], current: number) {
+    this.classes = classes;
+    this.current = current;
+  }
+
+  add(name: string, students: string[]) {
+    let id = this.classes.map((c) => c.id).reduce((a, b) => Math.max(a, b), 0);
+    this.classes.push(new Class(id + 1, name, students));
+  }
+
+  remove(id: number) {
+    this.classes = this.classes.filter((c) => c.id !== id);
+    if (this.current === id) this.current = -1;
+  }
+
+  isEmpty() {
+    return this.classes.length === 0;
+  }
+
+  static fromJSON(json: any) {
+    return new Classes(json.classes.map(Class.fromJSON), json.current);
+  }
+
+  toJSON() {
+    return {
+      classes: this.classes,
+      current: this.current,
+    };
+  }
+}
+
+export const classes = writable(loadClasses());
+
+classes.subscribe((value) =>
   localStorage.setItem("data", JSON.stringify(value.toJSON()))
 );
 
-function loadClass(): Class {
+function loadClasses(): Classes {
   try {
-    return Class.fromJSON(JSON.parse(localStorage.getItem("data") ?? ""));
+    return Classes.fromJSON(JSON.parse(localStorage.getItem("data")!));
   } catch {
-    return new Class("Class", []);
+    return new Classes([], -1);
   }
 }

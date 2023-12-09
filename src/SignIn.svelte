@@ -1,5 +1,5 @@
-<script>
-  import { data } from "./stores";
+<script lang="ts">
+  import { classes } from "./stores";
 
   let students = ["Connor Slade"];
 

@@ -19,6 +19,9 @@
     "vite": "^5.0.0"
   },
   "dependencies": {
+    "@svelteuidev/composables": "^0.15.4",
+    "@svelteuidev/core": "^0.15.4",
+    "radix-icons-svelte": "^1.2.1",
     "svelte-routing": "^2.10.0"
   }
 }
