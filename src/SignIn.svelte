@@ -6,6 +6,7 @@
     Text,
     Group,
     Button,
+    Modal,
   } from "@svelteuidev/core";
   import { state } from "./stores";
   import { Person } from "radix-icons-svelte";
@@ -18,6 +19,7 @@
     })
   );
 
+  let showSignedIn = false;
   let selectedRaw = "";
   let selected = -1;
   onMount(() => {
@@ -88,6 +90,13 @@
     style="width: 100%"
   />
   <Button variant="outline" on:click={() => navigate("/config")}>Config</Button>
+  <Button
+    variant="outline"
+    on:click={() => (showSignedIn = true)}
+    disabled={!selectedClass}
+  >
+    View Signed In
+  </Button>
   <Button variant="outline" on:click={resetAll}>Reset All</Button>
   <Button variant="outline" on:click={undo}>Undo</Button>
 </Group>
@@ -106,3 +115,18 @@
     </Group>
   {/if}
 {/if}
+
+<Modal
+  opened={showSignedIn}
+  title="Signed In"
+  size="lg"
+  on:close={() => (showSignedIn = false)}
+>
+  {#if selectedClass}
+    <ul>
+      {#each selectedClass.signedIn as student}
+        <li><Text>{student}</Text></li>
+      {/each}
+    </ul>
+  {/if}
+</Modal>
