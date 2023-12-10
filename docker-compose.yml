@@ -1,0 +1,6 @@
+services:
+  web-server:
+    image: study-hall
+    build: .
+    ports:
+      - "8081:80"
