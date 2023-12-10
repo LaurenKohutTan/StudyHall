@@ -43,9 +43,7 @@
     (DING.cloneNode() as HTMLAudioElement).play();
   }
 
-  let recent: string[] = [];
   function signIn(student: string) {
-    recent.push(student);
     state.update((x) => {
       x.getClass(selected)!.signIn(student);
       return x;
@@ -61,8 +59,8 @@
   }
 
   function undo() {
-    let student = recent.pop();
     state.update((x) => {
+      let student = x.getClass(selected)?.signedIn.pop();
       x.getClass(selected)!.signOut(student!);
       return x;
     });
@@ -98,7 +96,11 @@
     View Signed In
   </Button>
   <Button variant="outline" on:click={resetAll}>Reset All</Button>
-  <Button variant="outline" on:click={undo}>Undo</Button>
+  <Button
+    variant="outline"
+    on:click={undo}
+    disabled={selectedClass?.signedIn.length == 0}>Undo</Button
+  >
 </Group>
 
 {#if selectedClass}
