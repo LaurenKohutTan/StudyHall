@@ -97,10 +97,10 @@
         Delete
       </Button>
     </Group>
+    <br />
   {/each}
 {/if}
 
-<br />
 <Title order={2}>Miscellaneous</Title>
 <br />
 

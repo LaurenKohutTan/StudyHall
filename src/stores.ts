@@ -53,15 +53,21 @@ class State {
   current: number = -1;
   playDing: boolean = true;
 
+  sortClasses() {
+    this.classes.sort((a, b) => a.name.localeCompare(b.name));
+  }
+
   addClass(name: string, students: string[]) {
     let id = this.classes.map((c) => c.id).reduce((a, b) => Math.max(a, b), 0);
     this.classes.push(new Class(id + 1, name, students));
+    this.sortClasses();
   }
 
   editClass(id: number, name: string, students: string[]) {
     let c = this.getClass(id)!;
     c.name = name;
     c.students = students;
+    this.sortClasses();
   }
 
   getClass(id: number): Class | null {
