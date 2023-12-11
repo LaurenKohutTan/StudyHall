@@ -38,15 +38,12 @@
   let modalState = new ModalState(ModelMode.Closed, "", []);
 
   function modalClose() {
+    let students = modalState.students.trim().split("\n");
     state.update((x) => {
       if (modalState.mode == ModelMode.Creating)
-        x.addClass(modalState.name, modalState.students.split("\n"));
+        x.addClass(modalState.name, students);
       else if (modalState.mode == ModelMode.Editing)
-        x.editClass(
-          modalState.id!,
-          modalState.name,
-          modalState.students.split("\n")
-        );
+        x.editClass(modalState.id!, modalState.name, students);
       return x;
     });
     modalState.mode = ModelMode.Closed;
@@ -70,7 +67,7 @@
   }
 </script>
 
-<Title>StudyHall Config</Title>
+<Title>Study Hall Config</Title>
 <Divider />
 
 <Group>

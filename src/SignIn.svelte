@@ -67,7 +67,7 @@
   }
 </script>
 
-<Title>StudyHall Sign In</Title>
+<Title>Study Hall Sign In</Title>
 <Divider />
 
 <Text
