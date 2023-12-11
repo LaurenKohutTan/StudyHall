@@ -67,6 +67,10 @@
   }
 </script>
 
+<svelte:head>
+  <title>Study Hall &mdash; Config</title>
+</svelte:head>
+
 <Title>Study Hall Config</Title>
 <Divider />
 

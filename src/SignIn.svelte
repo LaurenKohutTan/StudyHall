@@ -67,6 +67,10 @@
   }
 </script>
 
+<svelte:head>
+  <title>Study Hall &mdash; Sign In</title>
+</svelte:head>
+
 <Title>Study Hall Sign In</Title>
 <Divider />
 
