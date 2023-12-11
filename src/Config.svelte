@@ -89,6 +89,7 @@
 
 {#if $state.noClasses()}
   <Text>No classes yet.</Text>
+  <br />
 {:else}
   {#each $state.classes as i}
     <Group>
