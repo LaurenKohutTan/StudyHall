@@ -110,6 +110,11 @@
     label="Play ding sound when signing in"
     bind:checked={$state.playDing}
   />
+  <br />
+  <Checkbox
+    label="Separate by first letter of last name"
+    bind:checked={$state.separateByLast}
+  />
 </Text>
 
 <Modal

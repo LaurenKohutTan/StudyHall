@@ -18,8 +18,29 @@ class Class {
     return c;
   }
 
-  freshStudents() {
-    return this.students.filter((s) => !this.signedIn.includes(s));
+  freshStudentsByLast(): { letter: string; students: string[] }[] {
+    let out: { letter: string; students: string[] }[] = [];
+    let working: string[] = [];
+    let last = "";
+
+    const flush = () => {
+      if (working.length > 0) out.push({ letter: last[0], students: working });
+      working = [];
+    };
+
+    for (let s of this.students.toSorted()) {
+      if (this.signedIn.includes(s)) continue;
+      if (s[0] !== last[0] && working.length > 0) flush();
+      working.push(s);
+      last = s;
+    }
+
+    flush();
+    return out;
+  }
+
+  freshStudents(): string[] {
+    return this.students.toSorted().filter((s) => !this.signedIn.includes(s));
   }
 
   signIn(student: string) {
@@ -52,6 +73,7 @@ class State {
   classes: Class[] = [];
   current: number = -1;
   playDing: boolean = true;
+  separateByLast: boolean = true;
 
   sortClasses() {
     this.classes.sort((a, b) => a.name.localeCompare(b.name));
@@ -88,6 +110,7 @@ class State {
     state.classes = json.classes.map(Class.fromJSON);
     state.current = json.current;
     state.playDing = json.playDing;
+    state.separateByLast = json.separateByLast;
     return state;
   }
 
@@ -96,6 +119,7 @@ class State {
       classes: this.classes,
       current: this.current,
       playDing: this.playDing,
+      separateByLast: this.separateByLast,
     };
   }
 }

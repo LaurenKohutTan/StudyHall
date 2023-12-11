@@ -111,6 +111,19 @@
   <Divider />
   {#if selectedClass.allSignedIn()}
     <Text>All students signed in.</Text>
+  {:else if $state.separateByLast}
+    {#each selectedClass.freshStudentsByLast() as group}
+      <Title order={2}>{group.letter}</Title>
+      <Divider variant="dashed" />
+      <Group>
+        {#each group.students as student}
+          <Button variant="filled" size="md" on:click={() => signIn(student)}>
+            {student}
+          </Button>
+        {/each}
+      </Group>
+      <br />
+    {/each}
   {:else}
     <Group>
       {#each selectedClass.freshStudents() as student}
@@ -126,6 +139,7 @@
   opened={showSignedIn}
   title="Signed In"
   size="lg"
+  overflow="inside"
   on:close={() => (showSignedIn = false)}
 >
   {#if selectedClass}
