@@ -13,8 +13,7 @@
      */
     "allowJs": true,
     "checkJs": true,
-    "isolatedModules": true, 
-    "lib": ["ESNext.Array"]
+    "isolatedModules": true
   },
   "include": ["src/**/*.ts", "src/**/*.js", "src/**/*.svelte"],
   "references": [{ "path": "./tsconfig.node.json" }]

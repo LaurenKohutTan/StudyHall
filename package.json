@@ -21,7 +21,6 @@
   "dependencies": {
     "@svelteuidev/composables": "^0.15.4",
     "@svelteuidev/core": "^0.15.4",
-    "array.prototype.tosorted": "^1.1.2",
     "radix-icons-svelte": "^1.2.1",
     "svelte-routing": "^2.10.0"
   }

@@ -1,5 +1,4 @@
 import { writable } from "svelte/store";
-import * as toSorted from "array.prototype.tosorted"
 
 class Class {
   id: number;
@@ -29,7 +28,7 @@ class Class {
       working = [];
     };
 
-    for (let s of toSorted(this.students)) {
+    for (let s of this.students.toSorted()) {
       if (this.signedIn.includes(s)) continue;
       if (s[0] !== last[0] && working.length > 0) flush();
       working.push(s);
@@ -41,7 +40,7 @@ class Class {
   }
 
   freshStudents(): string[] {
-    return toSorted(this.students).filter((s) => !this.signedIn.includes(s));
+    return this.students.toSorted().filter((s) => !this.signedIn.includes(s));
   }
 
   signIn(student: string) {
