@@ -10,6 +10,7 @@ class Class {
     this.id = id;
     this.name = name;
     this.students = students;
+    this.students.sort();
   }
 
   static fromJSON(json: any) {
@@ -28,7 +29,7 @@ class Class {
       working = [];
     };
 
-    for (let s of this.students.toSorted()) {
+    for (let s of this.students) {
       if (this.signedIn.includes(s)) continue;
       if (s[0] !== last[0] && working.length > 0) flush();
       working.push(s);
@@ -40,7 +41,7 @@ class Class {
   }
 
   freshStudents(): string[] {
-    return this.students.toSorted().filter((s) => !this.signedIn.includes(s));
+    return this.students.filter((s) => !this.signedIn.includes(s));
   }
 
   signIn(student: string) {
@@ -77,6 +78,7 @@ class State {
 
   sortClasses() {
     this.classes.sort((a, b) => a.name.localeCompare(b.name));
+    this.classes.forEach((c) => c.students.sort());
   }
 
   addClass(name: string, students: string[]) {
